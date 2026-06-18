@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "default.name" .}}
+  labels:
+{{ include "ncc.labels" . | indent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "ncc.selectors" . | indent 6 }}
+  template:
+    metadata:
+      annotations:
+        ncc.navercorp.com/l4-weights: {{ .Values.ncc.installation | quote }}
+      labels:
+{{ include "ncc.labels" . | indent 8 }}
+    spec:
+      serviceAccountName: sa-proxy-sidecar
+      automountServiceAccountToken: true
+      containers:
+      # must be run before application container
+      - name: {{ .Values.sidecar.name }}
+        image: {{ .Values.sidecar.image }}
+        imagePullPolicy: Always
+        env:
+          - name: OCI_RESOURCE_PRINCIPAL_VERSION
+            value: "2.2"
+          - name: OCI_RESOURCE_PRINCIPAL_REGION
+            value: "me-riyadh-1"
+          - name: REGION
+            value: "me-riyadh-1"
+          - name: VAULT_NAME
+            value: "stage-naver-innovation-vault"
+          - name: COMPARTMENT_NAME
+            value: "stage-mapservice"
+          - name: ENABLE_KMS_PROXY
+            value: "true"
+          - name: ENABLE_LOGGING_PROXY
+            value: "true"
+          - name: MAIN_SERVER_PORT
+            value: "10080"
+          - name: KMS_PROXY_PORT
+            value: "10081"
+          - name: LOGGING_PROXY_PORT
+            value: "10082"
+        ports:
+          - containerPort: 10080
+            name: sc-main-http
+            protocol: TCP
+          - containerPort: 10081
+            name: sc-kms-http
+            protocol: TCP
+          - containerPort: 10082
+            name: sc-log-http
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 300m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      - name: {{ .Values.appName }}
+        image: {{ .Values.registryHost }}/{{ .Values.registryProjectName }}/{{ .Values.spring.image.name }}:{{ .Values.spring.image.tag }}
+        imagePullPolicy: {{ .Values.spring.image.pullPolicy }}
+        ports:
+          - containerPort: {{ .Values.spring.containerPort }}
+            name: service
+            protocol: TCP
+        resources:
+{{ toYaml .Values.spring.resources | indent 10 }}
+{{- if .Values.spring.pinpointEnabled }}
+        volumeMounts:
+          - mountPath: /home1/waslteam/apps/pinpoint/pinpoint-custom.config
+            name: {{ .Values.appName }}-configs
+            readOnly: true
+            subPath: pinpoint-custom.config
+{{- end }}
+        env:
+          - name: LANG
+            value: {{ .Values.lang | quote }}
+          - name: TZ
+            value: {{ .Values.timezone | quote }}
+          - name: SPRING_PROFILES_ACTIVE
+            value: {{ .Values.spring.profile | quote }}
+          - name: SPRING_DATASOURCE_URL
+            value: {{ .Values.db.url | quote }}
+          - name: SPRING_DATASOURCE_USERNAME
+            value: {{ .Values.db.username | quote }}
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: {{ .Values.db.password | quote }}
+          - name: BACKSTAGE_SIGNATURE_ENABLED
+            value: {{ .Values.backstage.signatureEnabled | quote }}
+          - name: BACKSTAGE_HOST_SECURITY_KEY
+            value: {{ .Values.backstage.hostSecurityKey | quote }}
+{{- if .Values.spring.pinpointEnabled }}
+          - name: PINPOINT_ENABLED
+            value: {{ .Values.spring.pinpointEnabled | quote }}
+          - name: PINPOINT_PROJECT_NAME
+            value: {{ include "instance.service.name" . }}
+          - name: PINPOINT_PROFILES
+            value: {{ include "pinpoint.profiles" . }}
+          - name: NAME_SUFFIX
+            value: {{ .Values.nameSuffix }}
+          - name: INSTALLATION
+            value: {{ .Values.ncc.installation }}
+          - name: FOR_REAL
+            value: {{ .Values.forReal | quote }}
+{{- end }}
+{{- if .Values.spring.pinpointEnabled }}
+      volumes:
+        - name: {{ .Values.appName }}-configs
+          configMap:
+            name: {{ include "default.name" . }}-configs
+            defaultMode: 0777
+{{- end }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
