@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "default.name" .}}
+  labels:
+{{ include "ncc.labels" . | indent 4 }}
+    ncc.navercorp.com/instance-service: {{ include "instance.service.name" . }}
+  annotations:
+    external-dns: "true"
+    oci.oraclecloud.com/load-balancer-type: "lb"
+    service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+    service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+    service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "HTTP"
+spec:
+  type: {{ .Values.spring.service.type }}
+  ports:
+    - port: {{ .Values.spring.service.port }}
+      targetPort: {{ .Values.spring.containerPort }}
+      name: http
+  selector:
+{{ include "ncc.selectors" . | indent 4 }}

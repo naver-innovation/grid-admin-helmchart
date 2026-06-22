@@ -1,0 +1,54 @@
+appName: grid-admin-web
+nameSuffix: stage
+forReal: false
+
+timezone: Asia/Riyadh
+lang: en_US.UTF-8
+
+replicas: 1
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+registryHost: me-riyadh-1.ocir.io
+registryProjectName: axlo4g31gl45
+
+# Node.js 서버 설정값
+spring:
+  image:
+    name: grid-admin-web-stage
+    tag: develop
+    pullPolicy: Always
+  containerPort: 80
+  service:
+    port: 80
+    type: LoadBalancer
+  nodeEnv: stage
+  pinpointEnabled: false
+  pinpointSampleRate: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+sidecar:
+  name: wasl-proxy-sidecar
+  image: me-riyadh-1.ocir.io/axlo4g31gl45/wasl-sidecar-proxy:260114-1913
+
+imagePullSecrets: "mapservice-ocir-read"
+
+nodeSelector:
+  kubernetes.io/arch: amd64
+
+ncc:
+  application: grid-admin-web
+  instance: grid-admin-web
+  version: 1
+  installation: 2026-0101-0001
