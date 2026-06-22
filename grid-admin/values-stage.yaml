@@ -15,7 +15,7 @@ autoscaling:
   targetMemoryUtilizationPercentage: 80
 
 registryHost: me-riyadh-1.ocir.io
-registryProjectName: axlo4g31gl45  # TODO: confirm project name
+registryProjectName: axlo4g31gl45
 
 spring:
   image:
@@ -39,12 +39,12 @@ spring:
 
 db:
   url: "jdbc:postgresql://172.18.58.31:5432/gridadmindb"
-  username: "gridadminsvc"                                  
-  password: "<DB_PASSWORD>"                         
+  username: "gridadminsvc"
+  password: "<DB_PASSWORD>"
 
 backstage:
   signatureEnabled: "true"
-  hostSecurityKey: "gridadmin1!"
+  hostSecurityKey: "<BACKSTAGE_HOST_SECURITY_KEY>"  # TODO: fill in actual key
 
 sidecar:
   name: wasl-proxy-sidecar
