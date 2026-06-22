@@ -18,6 +18,13 @@ spec:
       labels:
 {{ include "ncc.labels" . | indent 8 }}
     spec:
+      nodeSelector:
+        role: "sensitive"
+      tolerations:
+        - key: "security"
+          operator: "Equal"
+          value: "sensitive"
+          effect: "NoSchedule"
       serviceAccountName: sa-proxy-sidecar
       automountServiceAccountToken: true
       containers:
