@@ -1,6 +1,6 @@
-appName: mta-fe-bubblekeyword
+appName: grid-admin-web
 nameSuffix: stage
-forReal: true
+forReal: false
 
 timezone: Asia/Riyadh
 lang: en_US.UTF-8
@@ -20,7 +20,7 @@ registryProjectName: axlo4g31gl45
 # Node.js 서버 설정값
 spring:
   image:
-    name: mta-fe-bubblekeyword-stage
+    name: grid-admin-web-stage
     tag: develop
     pullPolicy: Always
   containerPort: 80
@@ -48,7 +48,7 @@ nodeSelector:
   kubernetes.io/arch: amd64
 
 ncc:
-  application: mta-fe-bubblekeyword
-  instance: mta-fe-bubblekeyword
+  application: grid-admin-web
+  instance: grid-admin-web
   version: 1
   installation: 2026-0101-0001
