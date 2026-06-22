@@ -19,8 +19,8 @@ registryProjectName: axlo4g31gl45  # TODO: confirm project name
 
 spring:
   image:
-    name: grid-admin-stage  # TODO: confirm image name after ImageCopier setup
-    tag: develop             # TODO: update to actual image tag after first build
+    name: grid-admin-api-stage  # TODO: confirm image name after ImageCopier setup
+    tag: feature-NCCT_MAPS_PLATFORM-1019-0566af4 # TODO: update to actual image tag after first build
     pullPolicy: Always
   containerPort: 8081
   service:
