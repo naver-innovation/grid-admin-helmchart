@@ -19,8 +19,8 @@ registryProjectName: axlo4g31gl45  # TODO: confirm project name
 
 spring:
   image:
-    name: grid-admin-api-stage  # TODO: confirm image name after ImageCopier setup
-    tag: feature-NCCT_MAPS_PLATFORM-1019-0566af4 # TODO: update to actual image tag after first build
+    name: grid-admin-api-stage
+    tag: feature-NCCT_MAPS_PLATFORM-1019 # TODO: update to actual image tag after first build
     pullPolicy: Always
   containerPort: 8081
   service:
@@ -38,13 +38,13 @@ spring:
       memory: 1Gi
 
 db:
-  url: "jdbc:postgresql://<DB_HOST>:5432/gridadmin"  # TODO: fill in actual DB host
-  username: "grid"                                    # TODO: fill in actual username
-  password: "<DB_PASSWORD>"                          # TODO: fill in actual password
+  url: "jdbc:postgresql://172.18.58.31:5432/gridadmindb"
+  username: "gridadminsvc"                                  
+  password: "<DB_PASSWORD>"                         
 
 backstage:
   signatureEnabled: "true"
-  hostSecurityKey: "<BACKSTAGE_HOST_SECURITY_KEY>"  # TODO: fill in actual key
+  hostSecurityKey: "gridadmin1!"
 
 sidecar:
   name: wasl-proxy-sidecar
