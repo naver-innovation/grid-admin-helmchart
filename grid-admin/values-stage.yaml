@@ -39,7 +39,7 @@ spring:
 
 db:
   url: "jdbc:postgresql://172.18.58.31:5432/gridadmindb"
-  username: "gridadminsvc"
+  username: "gridadminappo"
   password: "<DB_PASSWORD>"
 
 backstage:
@@ -56,7 +56,7 @@ nodeSelector:
   kubernetes.io/arch: amd64
 
 ncc:
-  application: grid-admin
-  instance: grid-admin
+  application: grid-admin-api
+  instance: grid-admin-api
   version: 1
   installation: 2026-0101-0001  # TODO: update to actual installation ID
