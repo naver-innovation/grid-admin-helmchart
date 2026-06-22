@@ -20,7 +20,7 @@ registryProjectName: axlo4g31gl45  # TODO: confirm project name
 spring:
   image:
     name: grid-admin-reverse-proxy-stage  # TODO: confirm image name after ImageCopier setup
-    tag: develop                           # TODO: update to actual image tag after first build
+    tag: feature-NCCT_MAPS_PLATFORM-1019
     pullPolicy: Always
   containerPort: 8080
   service:
