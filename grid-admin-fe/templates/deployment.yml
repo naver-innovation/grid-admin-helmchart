@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "default.name" .}}
+  labels:
+{{ include "ncc.labels" . | indent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "ncc.selectors" . | indent 6 }}
+  template:
+    metadata:
+      annotations:
+        ncc.navercorp.com/l4-weights: {{ .Values.ncc.installation | quote }}
+      labels:
+{{ include "ncc.labels" . | indent 8 }}
+    spec:
+      serviceAccountName: sa-proxy-sidecar
+      automountServiceAccountToken: true
+      containers:
+      # must be run before application container
+      - name: {{ .Values.sidecar.name }}
+        image: {{ .Values.sidecar.image }}
+        imagePullPolicy: Always
+        env:
+          - name: OCI_RESOURCE_PRINCIPAL_VERSION # required
+            value: "2.2"
+          - name: OCI_RESOURCE_PRINCIPAL_REGION # required
+            value: "me-riyadh-1"
+          - name: REGION # optional
+            value: "me-riyadh-1"
+          - name: VAULT_NAME # optional, if don't use kms-proxy
+            value: "stage-naver-innovation-vault"
+          - name: COMPARTMENT_NAME # optional, if don't use logging-proxy
+            value: "stage-mapservice"
+          - name: ENABLE_KMS_PROXY # optional, default true
+            value: "true"
+          - name: ENABLE_LOGGING_PROXY # optional, default true
+            value: "true"
+          - name: MAIN_SERVER_PORT # optional, default 10080
+            value: "10080"
+          - name: KMS_PROXY_PORT # optional, default 10081
+            value: "10081"
+          - name: LOGGING_PROXY_PORT # optional, default 10082
+            value: "10082"
+        ports:
+          - containerPort: 10080
+            name: sc-main-http
+            protocol: TCP
+          - containerPort: 10081
+            name: sc-kms-http
+            protocol: TCP
+          - containerPort: 10082
+            name: sc-log-http
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 300m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      - name: {{ .Values.appName }}
+        image: {{ .Values.registryHost }}/{{ .Values.registryProjectName }}/{{ .Values.spring.image.name }}:{{ .Values.spring.image.tag }}
+        imagePullPolicy: {{ .Values.spring.image.pullPolicy }}
+        ports:
+          - containerPort: {{ .Values.spring.containerPort }}
+            name: service
+            protocol: TCP
+        resources:
+{{ toYaml .Values.spring.resources | indent 10 }}
+        env:
+          - name: TZ
+            value: {{ .Values.timezone | quote }}
+          - name: NODE_ENV
+            value: {{ .Values.spring.nodeEnv | quote }}
+          - name: PORT
+            value: {{ .Values.spring.containerPort | quote }}
+          - name: PM2_HOME
+            value: /tmp/.pm2
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
