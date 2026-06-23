@@ -21,7 +21,7 @@ registryProjectName: axlo4g31gl45
 spring:
   image:
     name: grid-admin-web-stage
-    tag: develop
+    tag: feature-NCCT_MAPS_PLATFORM-1063
     pullPolicy: Always
   containerPort: 80
   service:
