@@ -15,11 +15,11 @@ autoscaling:
   targetMemoryUtilizationPercentage: 80
 
 registryHost: me-riyadh-1.ocir.io
-registryProjectName: axlo4g31gl45  # TODO: confirm project name
+registryProjectName: axlo4g31gl45
 
 spring:
   image:
-    name: grid-admin-reverse-proxy-stage  # TODO: confirm image name after ImageCopier setup
+    name: grid-admin-reverse-proxy-stage
     tag: feature-NCCT_MAPS_PLATFORM-1019
     pullPolicy: Always
   containerPort: 8080
@@ -37,8 +37,8 @@ spring:
       memory: 1Gi
 
 gateway:
-  backendUri: "http://grid-admin"          # K8s service name of grid-admin within the cluster
-  frontendUri: "http://<FRONTEND_HOST>"    # TODO: fill in actual frontend URI
+  backendUri: "http://grid-admin-api-mapservice.stage-svc-ruh-1.naver-innovation.net/"  
+  frontendUri: "http://grid-admin-web-mapservice.stage-svc-ruh-1.naver-innovation.net/" 
   signatureEnabled: "true"
   hostSecurityKey: "<GATEWAY_HOST_SECURITY_KEY>"  # TODO: fill in actual key
   insecureTls: "true"
