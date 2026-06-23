@@ -38,7 +38,7 @@ spring:
       memory: 1Gi
 
 db:
-  url: "jdbc:postgresql://172.18.58.31:5432/gridadmindb"
+  url: "jdbc:postgresql://primary.djwsqwtfw5ivze7a4ch7hmvr4aseja.postgresql.me-riyadh-1.oci.oraclecloud.com:5432/gridadmindb"
   username: "gridadminappo"
   password: "<DB_PASSWORD>"
 
