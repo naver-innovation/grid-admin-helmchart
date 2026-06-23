@@ -103,6 +103,8 @@ spec:
             value: {{ .Values.backstage.signatureEnabled | quote }}
           - name: BACKSTAGE_HOST_SECURITY_KEY
             value: {{ .Values.backstage.hostSecurityKey | quote }}
+          - name: OCI_LOG_OCID
+            value: {{ .Values.logging.ociLogOcid | quote }}
 {{- if .Values.spring.pinpointEnabled }}
           - name: PINPOINT_ENABLED
             value: {{ .Values.spring.pinpointEnabled | quote }}
