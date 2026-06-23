@@ -69,7 +69,7 @@ spec:
             memory: 256Mi
           requests:
             cpu: 100m
-            memory: 128Mi
+            memory: 256Mi
       - name: {{ .Values.appName }}
         image: {{ .Values.registryHost }}/{{ .Values.registryProjectName }}/{{ .Values.spring.image.name }}:{{ .Values.spring.image.tag }}
         imagePullPolicy: {{ .Values.spring.image.pullPolicy }}
