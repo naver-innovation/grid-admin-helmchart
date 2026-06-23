@@ -26,7 +26,7 @@ spring:
   service:
     port: 80
     type: LoadBalancer
-  profile: postgres
+  profile: stage
   pinpointEnabled: true
   pinpointSampleRate: 1
   resources:
@@ -45,6 +45,11 @@ db:
 backstage:
   signatureEnabled: "true"
   hostSecurityKey: "<BACKSTAGE_HOST_SECURITY_KEY>"  # TODO: fill in actual key
+
+logging:
+  # OCI Logging project OCID from PE team — dots replaced with __ (double underscore)
+  # e.g. ocid1.log.me-riyadh-1.xxxx → ocid1__log__me-riyadh-1__xxxx
+  ociLogOcid: "ocid1__log__oc1__me-riyadh-1__amaaaaaavimdcvyaybutcl5lsbuhzzpw4rn4ru543oxfh4pwjbm7ucacioba"
 
 sidecar:
   name: wasl-proxy-sidecar
