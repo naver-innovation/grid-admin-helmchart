@@ -27,15 +27,16 @@ spring:
     port: 80
     type: LoadBalancer
   profile: stage
+  javaOpts: "-Xms512m -Xmx1536m"
   pinpointEnabled: true
   pinpointSampleRate: 1
   resources:
     requests:
       cpu: 500m
-      memory: 512Mi
+      memory: 1Gi
     limits:
       cpu: 1000m
-      memory: 1Gi
+      memory: 2Gi
 
 db:
   url: "jdbc:postgresql://primary.djwsqwtfw5ivze7a4ch7hmvr4aseja.postgresql.me-riyadh-1.oci.oraclecloud.com:5432/gridadmindb"
