@@ -79,12 +79,19 @@ spec:
             protocol: TCP
         resources:
 {{ toYaml .Values.spring.resources | indent 10 }}
-{{- if .Values.spring.pinpointEnabled }}
+{{- if or .Values.spring.pinpointEnabled .Values.secretProviderClass.enabled }}
         volumeMounts:
+{{- if .Values.spring.pinpointEnabled }}
           - mountPath: /home1/waslteam/apps/pinpoint/pinpoint-custom.config
             name: {{ .Values.appName }}-configs
             readOnly: true
             subPath: pinpoint-custom.config
+{{- end }}
+{{- if .Values.secretProviderClass.enabled }}
+          - mountPath: /mnt/secrets-store
+            name: secrets-store
+            readOnly: true
+{{- end }}
 {{- end }}
         env:
           - name: JDK_JAVA_OPTIONS
@@ -99,8 +106,16 @@ spec:
             value: {{ .Values.db.url | quote }}
           - name: SPRING_DATASOURCE_USERNAME
             value: {{ .Values.db.username | quote }}
+{{- if .Values.secretProviderClass.enabled }}
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "default.name" . }}-oci-secret
+                key: DB_PASSWORD
+{{- else }}
           - name: SPRING_DATASOURCE_PASSWORD
             value: {{ .Values.db.password | quote }}
+{{- end }}
           - name: BACKSTAGE_SIGNATURE_ENABLED
             value: {{ .Values.backstage.signatureEnabled | quote }}
           - name: BACKSTAGE_HOST_SECURITY_KEY
@@ -121,12 +136,22 @@ spec:
           - name: FOR_REAL
             value: {{ .Values.forReal | quote }}
 {{- end }}
-{{- if .Values.spring.pinpointEnabled }}
+{{- if or .Values.spring.pinpointEnabled .Values.secretProviderClass.enabled }}
       volumes:
+{{- if .Values.spring.pinpointEnabled }}
         - name: {{ .Values.appName }}-configs
           configMap:
             name: {{ include "default.name" . }}-configs
             defaultMode: 0777
+{{- end }}
+{{- if .Values.secretProviderClass.enabled }}
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ include "default.name" . }}-spc
+{{- end }}
 {{- end }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets }}

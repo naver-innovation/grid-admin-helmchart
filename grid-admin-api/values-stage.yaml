@@ -41,11 +41,16 @@ spring:
 db:
   url: "jdbc:postgresql://primary.djwsqwtfw5ivze7a4ch7hmvr4aseja.postgresql.me-riyadh-1.oci.oraclecloud.com:5432/gridadmindb"
   username: "gridadminappo"
-  password: "<DB_PASSWORD>"
+  # password: injected from OCI Vault via secretProviderClass
 
 backstage:
   signatureEnabled: "true"
   hostSecurityKey: "<BACKSTAGE_HOST_SECURITY_KEY>"  # TODO: fill in actual key
+
+secretProviderClass:
+  enabled: true
+  vaultId: "ocid1.vault.oc1.me-riyadh-1.s5uu4gxoaade4.abqwuljr4pemf4omoa7bezmlcy2zcjzvbv5x22nwsvv4ouk7n2k5x2ggolaq"
+  dbPasswordSecretName: "grid-admin-stage-db-passwd"
 
 logging:
   # OCI Logging project OCID from PE team — dots replaced with __ (double underscore)
