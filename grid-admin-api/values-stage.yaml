@@ -44,7 +44,7 @@ db:
   # password: injected from OCI Vault via secretProviderClass
 
 backstage:
-  signatureEnabled: "true"
+  signatureEnabled: "false"
   hostSecurityKey: "<BACKSTAGE_HOST_SECURITY_KEY>"  # TODO: fill in actual key
 
 secretProviderClass:
