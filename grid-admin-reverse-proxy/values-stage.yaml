@@ -20,7 +20,7 @@ registryProjectName: axlo4g31gl45
 spring:
   image:
     name: grid-admin-reverse-proxy-stage
-    tag: feature-NCCT_MAPS_PLATFORM-1019
+    tag: main
     pullPolicy: Always
   containerPort: 8080
   service:
