@@ -12,6 +12,10 @@ spec:
     name: {{ include "default.name" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+{{- with .Values.autoscaling.behavior }}
+  behavior:
+{{ toYaml . | indent 4 }}
+{{- end }}
   metrics:
     - type: Resource
       resource:
