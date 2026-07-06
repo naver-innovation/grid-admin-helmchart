@@ -1,0 +1,13 @@
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "default.name" . }}
+  labels:
+{{ include "ncc.labels" . | indent 4 }}
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+{{ include "ncc.selectors" . | indent 6 }}
+{{- end }}
