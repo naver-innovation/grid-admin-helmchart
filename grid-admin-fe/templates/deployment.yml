@@ -8,6 +8,13 @@ spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
 {{- end }}
+{{- with .Values.deployment.strategy }}
+  strategy:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with .Values.deployment.minReadySeconds }}
+  minReadySeconds: {{ . }}
+{{- end }}
   selector:
     matchLabels:
 {{ include "ncc.selectors" . | indent 6 }}
@@ -18,8 +25,20 @@ spec:
       labels:
 {{ include "ncc.labels" . | indent 8 }}
     spec:
+{{- with .Values.deployment.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+{{- end }}
       serviceAccountName: sa-proxy-sidecar
       automountServiceAccountToken: true
+{{- if .Values.topologySpreadConstraints.enabled }}
+      topologySpreadConstraints:
+        - maxSkew: {{ .Values.topologySpreadConstraints.maxSkew }}
+          topologyKey: {{ .Values.topologySpreadConstraints.topologyKey | quote }}
+          whenUnsatisfiable: {{ .Values.topologySpreadConstraints.whenUnsatisfiable }}
+          labelSelector:
+            matchLabels:
+{{ include "ncc.selectors" . | indent 14 }}
+{{- end }}
       containers:
       # must be run before application container
       - name: {{ .Values.sidecar.name }}
@@ -72,6 +91,22 @@ spec:
             protocol: TCP
         resources:
 {{ toYaml .Values.spring.resources | indent 10 }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 5"]
+{{- with .Values.probes.startup }}
+        startupProbe:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.probes.readiness }}
+        readinessProbe:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.probes.liveness }}
+        livenessProbe:
+{{ toYaml . | indent 10 }}
+{{- end }}
         env:
           - name: TZ
             value: {{ .Values.timezone | quote }}
