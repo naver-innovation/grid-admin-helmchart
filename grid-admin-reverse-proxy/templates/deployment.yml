@@ -8,6 +8,11 @@ spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
 {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
 {{ include "ncc.selectors" . | indent 6 }}
@@ -18,8 +23,16 @@ spec:
       labels:
 {{ include "ncc.labels" . | indent 8 }}
     spec:
+      terminationGracePeriodSeconds: 40
       serviceAccountName: sa-proxy-sidecar
       automountServiceAccountToken: true
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+{{ include "ncc.selectors" . | indent 14 }}
       containers:
       # must be run before application container
       - name: {{ .Values.sidecar.name }}
@@ -72,6 +85,22 @@ spec:
             protocol: TCP
         resources:
 {{ toYaml .Values.spring.resources | indent 10 }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 5"]
+{{- if .Values.startupProbe }}
+        startupProbe:
+{{ toYaml .Values.startupProbe | indent 10 }}
+{{- end }}
+{{- if .Values.readinessProbe }}
+        readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 10 }}
+{{- end }}
+{{- if .Values.livenessProbe }}
+        livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 10 }}
+{{- end }}
 {{- if .Values.spring.pinpointEnabled }}
         volumeMounts:
           - mountPath: /home1/waslteam/apps/pinpoint/pinpoint-custom.config
