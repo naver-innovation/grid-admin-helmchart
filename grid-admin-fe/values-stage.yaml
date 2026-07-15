@@ -5,7 +5,7 @@ forReal: false
 timezone: Asia/Riyadh
 lang: en_US.UTF-8
 
-replicas: 2
+replicas: 1
 
 deployment:
   minReadySeconds: 10
@@ -18,8 +18,8 @@ deployment:
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 4
+  minReplicas: 1
+  maxReplicas: 1
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
   behavior:
