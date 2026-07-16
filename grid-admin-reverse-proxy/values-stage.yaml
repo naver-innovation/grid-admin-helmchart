@@ -56,6 +56,7 @@ spring:
     type: LoadBalancer
   pinpointEnabled: true
   pinpointSampleRate: 1
+  javaOpts: "-Dreactor.netty.http.server.accessLogEnabled=true"
   resources:
     requests:
       cpu: 200m
