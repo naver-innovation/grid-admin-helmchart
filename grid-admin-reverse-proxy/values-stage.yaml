@@ -49,6 +49,7 @@ spring:
     name: grid-admin-reverse-proxy-stage
     tag: main
     pullPolicy: Always
+  profile: stage
   containerPort: 8080
   service:
     port: 80
@@ -69,6 +70,11 @@ gateway:
   signatureEnabled: "true"
   hostSecurityKey: "<GATEWAY_HOST_SECURITY_KEY>"  # TODO: fill in actual key
   insecureTls: "true"
+
+logging:
+  # OCI Logging project OCID from PE team — dots replaced with __ (double underscore)
+  # e.g. ocid1.log.oc1.me-riyadh-1.xxxx → ocid1__log__oc1__me-riyadh-1__xxxx
+  ociLogOcid: "ocid1__log__oc1__me-riyadh-1__amaaaaaavimdcvya4frvbr3yb6u4rhndenmdho3b32y64btcnbkjxa2t6tgq"
 
 sidecar:
   name: wasl-proxy-sidecar
