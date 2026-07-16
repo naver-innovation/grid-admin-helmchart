@@ -123,6 +123,10 @@ spec:
             value: {{ .Values.gateway.hostSecurityKey | quote }}
           - name: GATEWAY_INSECURE_TLS
             value: {{ .Values.gateway.insecureTls | quote }}
+          - name: SPRING_PROFILES_ACTIVE
+            value: {{ .Values.spring.profile | quote }}
+          - name: OCI_LOG_OCID
+            value: {{ .Values.logging.ociLogOcid | quote }}
 {{- if .Values.spring.pinpointEnabled }}
           - name: PINPOINT_ENABLED
             value: {{ .Values.spring.pinpointEnabled | quote }}
