@@ -109,10 +109,6 @@ spec:
             subPath: pinpoint-custom.config
 {{- end }}
         env:
-{{- if .Values.spring.javaOpts }}
-          - name: JAVA_TOOL_OPTIONS
-            value: {{ .Values.spring.javaOpts | quote }}
-{{- end }}
           - name: LANG
             value: {{ .Values.lang | quote }}
           - name: TZ
