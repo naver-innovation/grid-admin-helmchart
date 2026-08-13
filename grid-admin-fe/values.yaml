@@ -72,8 +72,8 @@ registryProjectName: axlo4g31gl45
 # Node.js server settings
 spring:
   image:
-    name: grid-admin-web
-    tag: develop
+    name: grid-admin-web-prod
+    tag: v1.0.0-81a4922
     pullPolicy: Always
   containerPort: 80
   service:
