@@ -66,8 +66,8 @@ spring:
       memory: 1Gi
 
 gateway:
-  backendUri: "http://grid-admin-api-mapservice.svc-ruh-1.naver-innovation.net/"
-  frontendUri: "http://grid-admin-web-mapservice.svc-ruh-1.naver-innovation.net/"
+  backendUri: "http://grid-admin-api-prod-mapservice.prod-svc-ruh-1.naver-innovation.net/"
+  frontendUri: "http://grid-admin-web-mapservice.prod-svc-ruh-1.naver-innovation.net/"
   signatureEnabled: "true"
   hostSecurityKey: "<GATEWAY_HOST_SECURITY_KEY>"
   insecureTls: "true"
