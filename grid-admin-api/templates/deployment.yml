@@ -131,6 +131,8 @@ spec:
             value: {{ .Values.timezone | quote }}
           - name: SPRING_PROFILES_ACTIVE
             value: {{ .Values.spring.profile | quote }}
+          - name: SPRING_FLYWAY_ENABLED
+            value: {{ .Values.spring.flywayEnabled | quote }}
           - name: SPRING_DATASOURCE_URL
             value: {{ .Values.db.url | quote }}
           - name: SPRING_DATASOURCE_USERNAME
