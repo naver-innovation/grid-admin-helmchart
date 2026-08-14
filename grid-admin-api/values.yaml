@@ -1,0 +1,98 @@
+appName: grid-admin-api
+nameSuffix: real
+forReal: true
+
+timezone: Asia/Riyadh
+lang: en_US.UTF-8
+
+replicas: 1
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+registryHost: me-riyadh-1.ocir.io
+registryProjectName: axlo4g31gl45
+
+spring:
+  image:
+    name: grid-admin-api-prod
+    tag: main
+    pullPolicy: Always
+  containerPort: 8081
+  service:
+    port: 80
+    type: LoadBalancer
+  profile: prod
+  flywayEnabled: false
+  javaOpts: "-Xms512m -Xmx1536m"
+  pinpointEnabled: true
+  pinpointSampleRate: 1
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  startupProbe:
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8081
+    failureThreshold: 12
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8081
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 3
+  livenessProbe:
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8081
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    failureThreshold: 3
+
+db:
+  url: "jdbc:postgresql://primary.e6tdlnuyk3dmv45afu4qedixlidkyq.postgresql.me-riyadh-1.oci.oraclecloud.com:5432/gridadmindb"
+  username: "gridadminappo"
+  password: "V5nNQuku!IG6#XjfwGdj"
+
+secretProviderClass:
+  enabled: false
+
+backstage:
+  signatureEnabled: "false"
+  hostSecurityKey: "<BACKSTAGE_HOST_SECURITY_KEY>"
+
+logging:
+  ociLogOcid: "ocid1__log__oc1__me-riyadh-1__amaaaaaavimdcvyad7zhifkc7hueb2j6mi3j23lorngsnehqueyciuv4ccyq"
+
+mek:
+  name: "ruh-prod-mapservice-mek-grid-admin"
+  ocid: "ocid1.key.oc1.me-riyadh-1.tnu4jabvaah4.abqwuljrlztaihle5nn44ieyvmrfuizdvdxhdccouq753nyc6kj2zx6ysevq"
+
+sidecar:
+  name: wasl-proxy-sidecar
+  image: me-riyadh-1.ocir.io/axlo4g31gl45/wasl-sidecar-proxy:260114-1913
+
+imagePullSecrets: "mapservice-ocir-read"
+
+nodeSelector:
+  kubernetes.io/arch: amd64
+
+ncc:
+  application: grid-admin-api
+  instance: grid-admin-api
+  version: 1
+  installation: 2026-0101-0001
