@@ -73,14 +73,14 @@ registryProjectName: axlo4g31gl45
 spring:
   image:
     name: grid-admin-web-prod
-    tag: v1.0.0-81a4922
+    tag: main
     pullPolicy: Always
   containerPort: 80
   service:
     port: 80
     type: LoadBalancer
   nodeEnv: production
-  pinpointEnabled: true
+  pinpointEnabled: false
   pinpointSampleRate: 1
   resources:
     requests:
