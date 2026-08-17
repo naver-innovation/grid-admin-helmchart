@@ -33,7 +33,7 @@ spring:
   profile: prod
   flywayEnabled: false
   javaOpts: "-Xms512m -Xmx1536m"
-  pinpointEnabled: true
+  pinpointEnabled: false
   pinpointSampleRate: 1
   resources:
     requests:

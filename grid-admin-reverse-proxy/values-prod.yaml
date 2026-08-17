@@ -54,7 +54,7 @@ spring:
   service:
     port: 80
     type: LoadBalancer
-  pinpointEnabled: true
+  pinpointEnabled: false
   pinpointSampleRate: 1
   javaOpts: "-Dreactor.netty.http.server.accessLogEnabled=true"
   resources:
