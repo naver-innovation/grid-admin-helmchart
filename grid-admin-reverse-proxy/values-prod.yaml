@@ -68,7 +68,7 @@ spring:
 gateway:
   backendUri: "http://grid-admin-api-prod-mapservice.prod-svc-ruh-1.naver-innovation.net/"
   frontendUri: "http://grid-admin-web-mapservice.prod-svc-ruh-1.naver-innovation.net/"
-  signatureEnabled: "true"
+  signatureEnabled: "false"
   hostSecurityKey: "<GATEWAY_HOST_SECURITY_KEY>"
   insecureTls: "true"
 
