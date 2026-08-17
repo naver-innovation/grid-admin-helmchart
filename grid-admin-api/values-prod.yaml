@@ -66,10 +66,12 @@ spring:
 db:
   url: "jdbc:postgresql://primary.e6tdlnuyk3dmv45afu4qedixlidkyq.postgresql.me-riyadh-1.oci.oraclecloud.com/gridadmindb?currentSchema=gridadminappo"
   username: "gridadminsvc"
-  password: "V5nNQuku!IG6#XjfwGdj"
+  # password: injected from OCI Vault via secretProviderClass
 
 secretProviderClass:
-  enabled: false
+  enabled: true
+  vaultId: "ocid1.vault.oc1.me-riyadh-1.tnu4jabvaahb4.abqwuljr4cn7czrbqxkt4xqxii6u77sbr6vufmym7sdx5xrngpp6iq43tvxq"
+  dbPasswordSecretName: "grid-admin-stage-db-passwd"
 
 backstage:
   signatureEnabled: "false"
